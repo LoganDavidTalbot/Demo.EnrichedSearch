@@ -21,6 +21,15 @@ stages:
       wwwrootDir: 'Demo.EnrichedSearch.Client/wwwroot'
       dotnetSdkVersion: '5.0.100'
     steps:
+    
+    - task: CopyFiles@2
+      displayName: 'Copy IaC Files'
+      inputs:
+        SourceFolder: 'Demo.EnrichedSearch.IaC'
+        Contents: '*.json'
+        TargetFolder: 'IaC'
+        CleanTargetFolder: true
+
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
       inputs:
