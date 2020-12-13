@@ -31,12 +31,6 @@ stages:
       inputs:
         version: '$(dotnetSdkVersion)'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Restore project dependencies'
-      inputs:
-        command: 'restore'
-        projects: '**/*
-    
     - task: CopyFiles@2
       displayName: 'Copy IaC Files'
       inputs:
@@ -44,7 +38,11 @@ stages:
         Contents: '*.json'
         TargetFolder: 'IaC'
         CleanTargetFolder: true
-        OverWrite: true'
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore project dependencies'
+      inputs:
+        command: 'restore'
+        projects: '**/*
 
     - task: DotNetCoreCLI@2
       displayName: 'Build the project - $(buildConfiguration)'
@@ -52,7 +50,6 @@ stages:
         command: 'build'
         arguments: '--no-restore --configuration $(buildConfiguration)'
         projects: '**/*.csproj'
-
     
     - task: DotNetCoreCLI@2
       displayName: 'Publish the project - $(buildConfiguration)'
