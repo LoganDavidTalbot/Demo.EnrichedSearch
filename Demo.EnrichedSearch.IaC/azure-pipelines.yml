@@ -31,14 +31,6 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)/IaC'
         CleanTargetFolder: true
 
-    - task: CopyFiles@2
-      displayName: 'Copy IaC Templates Files'
-      inputs:
-        SourceFolder: 'Demo.EnrichedSearch.IaC/templates'
-        Contents: '*.json'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/IaC/templates'
-        CleanTargetFolder: true
-
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
       inputs:
