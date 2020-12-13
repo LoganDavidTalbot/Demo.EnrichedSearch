@@ -26,20 +26,32 @@ stages:
       wwwrootDir: 'Demo.EnrichedSearch.Client/wwwroot'
       dotnetSdkVersion: '5.0.100'
     steps:
-    - task: NuGetToolInstaller@1
-
-    - task: NuGetCommand@2
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
       inputs:
-        restoreSolution: '$(solution)'
+        version: '$(dotnetSdkVersion)'
 
-    - task: VSBuild@1
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore project dependencies'
       inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+        command: 'restore'
+        projects: '**/*.csproj'
 
-    - task: VSTest@2
+    - task: DotNetCoreCLI@2
+      displayName: 'Build the project - $(buildConfiguration)'
       inputs:
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
+        command: 'build'
+        arguments: '--no-restore --configuration $(buildConfiguration)'
+        projects: '**/*.csproj'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish the project - $(buildConfiguration)'
+      inputs:
+        command: 'publish'
+        projects: '**/*.csproj'
+        publishWebProjects: false
+        arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
+        zipAfterPublish: true
+
+    - publish: '$(Build.ArtifactStagingDirectory)'
+      artifact: drop
