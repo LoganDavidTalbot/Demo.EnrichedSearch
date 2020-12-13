@@ -31,6 +31,14 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)/IaC'
         CleanTargetFolder: true
 
+    - task: CopyFiles@2
+      displayName: 'Copy IaC Templates Files'
+      inputs:
+        SourceFolder: 'Demo.EnrichedSearch.IaC/templates'
+        Contents: '*.json'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/IaC/templates'
+        CleanTargetFolder: true
+
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
       inputs:
@@ -78,6 +86,51 @@ stages:
           steps:
           - download: current
             artifact: drop
+
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy ARM Template for Storage Account'
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Logan Enterprise Subscription'
+              subscriptionId: '$(demoSubscriptionId)'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: '$(demoResourceGroup)'
+              location: '$(demoLocation)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Pipeline.Workspace)/drop/IaC/storageAccount.json'
+              csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/storageAccount.parameters.json'
+              overrideParameters: '-storageAccountName $(storageAccountName)'
+              deploymentMode: 'Incremental'
+
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy ARM Template for Cognitive Service'
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Logan Enterprise Subscription'
+              subscriptionId: '$(demoSubscriptionId)'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: '$(demoResourceGroup)'
+              location: '$(demoLocation)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Pipeline.Workspace)/drop/IaC/cognitiveService.json'
+              csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/cognitiveService.parameters.json'
+              overrideParameters: '-name $(cognitiveServiceName)'
+              deploymentMode: 'Incremental'
+
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy ARM Template for Search Service'
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Logan Enterprise Subscription'
+              subscriptionId: '$(demoSubscriptionId)'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: '$(demoResourceGroup)'
+              location: '$(demoLocation)'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Pipeline.Workspace)/drop/IaC/searchService.json'
+              csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/searchService.parameters.json'
+              overrideParameters: '-serviceName $(searchServiceName)'
+              deploymentMode: 'Incremental'
 
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: 'Deploy ARM Template for Web Application'
