@@ -5,6 +5,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  releaseBranchName: 'release'
 
 stages:
 - stage: 'Build'
@@ -59,3 +60,40 @@ stages:
 
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
+
+- stage: 'Dev'
+  displayName: 'Deploy to the dev environment'
+  dependsOn: Build
+  condition: |
+    and
+    (
+      succeeded(),
+      eq(variables['Build.SourceBranchName'], variables['releaseBranchName'])
+    )
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-18.04'
+    environment: dev
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deploy ARM Template for Web Application'
+            inputs:
+              deploymentScope: 'Resource Group'
+              subscriptionId: 'c5d57719-6733-4586-b789-04a076020eb6'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'cognitive-demo-rg'
+              location: 'West Europe'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Pipeline.Workspace)/drop/IaC/webapp.json'
+              csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/webapp.parameters.json'
+              overrideParameters: '-name EnrichedSearch -hostingPlanName EnrichedSearchPlan -serverFarmResourceGroup cognitive-demo-rg -subscriptionId c5d57719-6733-4586-b789-04a076020eb6'
+              deploymentMode: 'Incremental'
