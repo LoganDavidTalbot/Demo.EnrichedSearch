@@ -30,14 +30,6 @@ stages:
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
       inputs:
         version: '$(dotnetSdkVersion)'
-
-    - task: CopyFiles@2
-      displayName: 'Copy IaC Files'
-      inputs:
-        SourceFolder: 'Demo.EnrichedSearch.IaC'
-        Contents: '*.json'
-        TargetFolder: 'IaC'
-        CleanTargetFolder: true
     - task: DotNetCoreCLI@2
       displayName: 'Restore project dependencies'
       inputs:
