@@ -82,6 +82,7 @@ stages:
             displayName: 'Deploy ARM Template for Web Application'
             inputs:
               deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Logan Enterprise Subscription'
               subscriptionId: 'c5d57719-6733-4586-b789-04a076020eb6'
               action: 'Create Or Update Resource Group'
               resourceGroupName: 'cognitive-demo-rg'
@@ -91,3 +92,4 @@ stages:
               csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/webapp.parameters.json'
               overrideParameters: '-name EnrichedSearch -hostingPlanName EnrichedSearchPlan -serverFarmResourceGroup cognitive-demo-rg -subscriptionId c5d57719-6733-4586-b789-04a076020eb6'
               deploymentMode: 'Incremental'
+              
