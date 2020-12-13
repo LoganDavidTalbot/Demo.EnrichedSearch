@@ -71,13 +71,14 @@ stages:
     environment: dev
     variables:
     - group: Release
+    - group: EnrichedSearch
     strategy:
       runOnce:
         deploy:
           steps:
           - download: current
             artifact: drop
-          
+
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: 'Deploy ARM Template for Web Application'
             inputs:
@@ -85,11 +86,11 @@ stages:
               azureResourceManagerConnection: 'Logan Enterprise Subscription'
               subscriptionId: 'c5d57719-6733-4586-b789-04a076020eb6'
               action: 'Create Or Update Resource Group'
-              resourceGroupName: 'cognitive-demo-rg'
-              location: 'West Europe'
+              resourceGroupName: '$(demoResourceGroup)'
+              location: '$(demoLocation)'
               templateLocation: 'Linked artifact'
               csmFile: '$(Pipeline.Workspace)/drop/IaC/webapp.json'
               csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/webapp.parameters.json'
-              overrideParameters: '-name EnrichedSearch -hostingPlanName EnrichedSearchPlan -serverFarmResourceGroup cognitive-demo-rg -subscriptionId c5d57719-6733-4586-b789-04a076020eb6'
+              overrideParameters: '-name $(webAppName) -hostingPlanName $(webAppPlanName) -serverFarmResourceGroup $(demoResourceGroup) -subscriptionId $(demoSubscriptionId)'
               deploymentMode: 'Incremental'
               
