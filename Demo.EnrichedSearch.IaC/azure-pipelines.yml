@@ -84,7 +84,7 @@ stages:
             inputs:
               deploymentScope: 'Resource Group'
               azureResourceManagerConnection: 'Logan Enterprise Subscription'
-              subscriptionId: 'c5d57719-6733-4586-b789-04a076020eb6'
+              subscriptionId: '$(demoSubscriptionId)'
               action: 'Create Or Update Resource Group'
               resourceGroupName: '$(demoResourceGroup)'
               location: '$(demoLocation)'
