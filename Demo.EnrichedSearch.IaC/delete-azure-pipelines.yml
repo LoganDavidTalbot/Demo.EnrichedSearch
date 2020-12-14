@@ -11,11 +11,17 @@ stages:
     displayName: 'Delete job'
     pool:
       vmImage: 'ubuntu-18.04'
-    steps:
-    - task: AzureResourceManagerTemplateDeployment@3
-      inputs:
-        deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: 'Logan Enterprise Subscription'
-        subscriptionId: '$(demoSubscriptionId)'
-        action: 'DeleteRG'
-        resourceGroupName: '$(demoResourceGroup)'
+    environment: dev
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'Logan Enterprise Subscription'
+              subscriptionId: '$(demoSubscriptionId)'
+              action: 'DeleteRG'
+              resourceGroupName: '$(demoResourceGroup)'
