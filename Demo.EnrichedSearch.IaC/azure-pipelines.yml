@@ -139,3 +139,9 @@ stages:
               overrideParameters: '-name $(webAppName) -hostingPlanName $(webAppPlanName) -serverFarmResourceGroup $(demoResourceGroup) -subscriptionId $(demoSubscriptionId)'
               deploymentMode: 'Incremental'
               
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'Logan Enterprise Subscription'
+              appType: 'webAppLinux'
+              appName: '$(webAppName)'
+              package: '$(System.DefaultWorkingDirectory)/drop/$(buildConfiguration)/*.zip'
