@@ -140,8 +140,9 @@ stages:
               deploymentMode: 'Incremental'
               
           - task: AzureWebApp@1
+            displayName: 'Deploy code to App Service: $(webAppName)'
             inputs:
               azureSubscription: 'Logan Enterprise Subscription'
               appType: 'webAppLinux'
               appName: '$(webAppName)'
-              package: '$(System.DefaultWorkingDirectory)/drop/$(buildConfiguration)/*.zip'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
