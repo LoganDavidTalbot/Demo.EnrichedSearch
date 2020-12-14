@@ -145,4 +145,4 @@ stages:
               azureSubscription: 'Logan Enterprise Subscription'
               appType: 'webAppLinux'
               appName: '$(webAppName)'
-              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Server.zip'
