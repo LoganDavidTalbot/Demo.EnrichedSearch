@@ -12,7 +12,7 @@ stages:
     pool:
       vmImage: 'ubuntu-18.04'
     variables:
-    - group: Release
+    - group: EnrichedSearch
     steps:
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
