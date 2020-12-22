@@ -1,0 +1,100 @@
+﻿@page "/EnrichedSearch"
+@using Demo.EnrichedSearch.Shared.Models
+@using Azure.Search.Documents.Indexes.Models
+@inject HttpClient Http
+
+<h3>Enriched Search</h3>
+
+@if (afterFirstLoad)
+{
+
+    @if (afterFirstLoad && searchIndexStatistics != null)
+    {
+    <div class="container">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Name: </strong> @searchIndexStatistics.IndexName <br />
+                <strong>Documents Count: </strong> @searchIndexStatistics.DocumentCount <br />
+                <strong>Documents Size: </strong> @searchIndexStatistics.StorageSize <br />
+            </li>
+            <li class="list-group-item">
+                <button type="button" class="btn btn-danger" @onclick="DeleteIndex">Delete Index</button>
+            </li>
+            <li class="list-group-item">
+                <EditForm Model=@searchBody OnSubmit="SearchIndex">
+                    <div class="form-inline">
+                        <InputText @bind-Value=searchBody.Search class="form-control" id="Name" />
+                        <input type="submit" class="btn btn-primary" value="Search" />
+                    </div>
+                </EditForm>
+            </li>
+        </ul>             
+    </div>
+    <div class="container">
+        @if (searchResponse?.Data != null)
+        {
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Search Results</strong>
+                </li>
+                @foreach (var result in searchResponse.Data)
+                {                    
+                    <li class="list-group-item">
+                        @result.HotelName
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    }
+    else
+    {
+    <button type="button" class="btn btn-primary" @onclick="CreateIndex">Create Index</button>
+    }
+    }
+    else
+    {
+    <p>Loading...</p>
+    }
+
+@code {
+    private IndexStats searchIndexStatistics;
+    private bool afterFirstLoad = false;
+    private SearchResponse searchResponse;
+    private SearchBody searchBody = new SearchBody();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            searchIndexStatistics = await Http.GetFromJsonAsync<IndexStats>("EnrichedSearches");
+        }
+        catch (Exception)
+        {
+            searchIndexStatistics = null;
+        }
+        afterFirstLoad = true;
+    }
+
+    private async Task CreateIndex()
+    {
+        var response = await Http.PostAsync("EnrichedSearches/Create", null);
+        await OnInitializedAsync();
+    }
+
+    private async Task DeleteIndex()
+    {
+        var response = await Http.DeleteAsync("EnrichedSearches");
+        searchIndexStatistics = null;
+    }
+
+    private async Task SearchIndex()
+    {
+        var response = await Http.PostAsJsonAsync<SearchBody>("EnrichedSearches/Search", searchBody);
+
+        if (response.IsSuccessStatusCode)
+        {
+            searchResponse = await response.Content.ReadFromJsonAsync<SearchResponse>();
+        }
+    }
+}

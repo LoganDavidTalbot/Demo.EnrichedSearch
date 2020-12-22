@@ -2,13 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>94c7268e-9883-48c8-9882-2a763fd07c39</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Search.Documents" Version="11.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Demo.EnrichedSearch.Service\Demo.EnrichedSearch.Service.csproj" />
     <ProjectReference Include="..\Client\Demo.EnrichedSearch.Client.csproj" />
     <ProjectReference Include="..\Shared\Demo.EnrichedSearch.Shared.csproj" />
   </ItemGroup>

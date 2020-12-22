@@ -1,11 +1,13 @@
+using Azure;
+using Azure.Search.Documents;
+using Azure.Search.Documents.Indexes;
+using Demo.EnrichedSearch.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
+using System;
 
 namespace Demo.EnrichedSearch.Server
 {
@@ -22,7 +24,21 @@ namespace Demo.EnrichedSearch.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IConfiguration>(Configuration);
 
+            string serviceName = Configuration.GetSection("SearchService")["ServiceName"];
+            string apiKey = Configuration.GetSection("SearchService")["ApiKey"];
+            string indexName = Configuration.GetSection("SearchService")["HotelIndexName"];
+
+            // Create a SearchIndexClient to send create/delete index commands
+            Uri serviceEndpoint = new Uri($"https://{serviceName}.search.windows.net/");
+            AzureKeyCredential credential = new AzureKeyCredential(apiKey);
+            SearchIndexClient adminClient = new SearchIndexClient(serviceEndpoint, credential);
+
+            // Create a SearchClient to load and query documents
+            SearchClient srchclient = new SearchClient(serviceEndpoint, indexName, credential);
+            services.AddTransient<ISearchIndexService, SearchIndexService>(s => new SearchIndexService(srchclient, adminClient));
+            services.AddTransient<ISearchService, SearchService>(s => new SearchService(srchclient));
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
