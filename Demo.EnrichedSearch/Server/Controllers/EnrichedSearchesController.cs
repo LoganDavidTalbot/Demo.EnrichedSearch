@@ -71,13 +71,25 @@ namespace Demo.EnrichedSearch.Server.Controllers
         [HttpPost("Search")]
         public async Task<ActionResult> Search([FromBody] SearchBody body)
         {
-            var response = await _searchService.RunQueriesAsync(body.Search);
+            var response = await _searchService.RunQueriesAsync(body.Search, body.Page, body.FacetFilter);
 
             if (response == null)
             {
                 return NotFound();
             }
 
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Automatticlly the suggest and compete.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns></returns>
+        [HttpGet("AutoSuggest")]
+        public async Task<ActionResult> AutoSuggest([FromQuery]string term)
+        {
+            var response = await _searchService.AutoCompleteAndSuggestAsync(term);
             return Ok(response);
         }
     }

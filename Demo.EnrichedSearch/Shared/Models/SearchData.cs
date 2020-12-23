@@ -12,6 +12,21 @@ namespace Demo.EnrichedSearch.Shared.Models
                 return 3;
             }
         }
+        public static int MaxPageRange
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        public static int PageRangeDelta
+        {
+            get
+            {
+                return 2;
+            }
+        }
     }
     public class SearchData
     {

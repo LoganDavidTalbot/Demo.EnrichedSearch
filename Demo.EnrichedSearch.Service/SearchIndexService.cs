@@ -46,7 +46,7 @@ namespace Demo.EnrichedSearch.Service
         {
             var index = await _indexClient.DeleteIndexAsync(indexName);
 
-            return index.Status == 200;
+            return index.Status == (int)HttpStatusCode.OK;
         }
 
         public async Task<SearchIndexStatistics> GetIndexStatisticsAsync(string indexName)

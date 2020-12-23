@@ -1,6 +1,8 @@
 ﻿@page "/EnrichedSearch"
 @using Demo.EnrichedSearch.Shared.Models
 @using Azure.Search.Documents.Indexes.Models
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
 @inject HttpClient Http
 
 <h3>Enriched Search</h3>
@@ -10,58 +12,77 @@
 
     @if (afterFirstLoad && searchIndexStatistics != null)
     {
-    <div class="container">
-        <ul class="list-group">
-            <li class="list-group-item">
-                <strong>Name: </strong> @searchIndexStatistics.IndexName <br />
-                <strong>Documents Count: </strong> @searchIndexStatistics.DocumentCount <br />
-                <strong>Documents Size: </strong> @searchIndexStatistics.StorageSize <br />
-            </li>
-            <li class="list-group-item">
-                <button type="button" class="btn btn-danger" @onclick="DeleteIndex">Delete Index</button>
-            </li>
-            <li class="list-group-item">
-                <EditForm Model=@searchBody OnSubmit="SearchIndex">
-                    <div class="form-inline">
-                        <InputText @bind-Value=searchBody.Search class="form-control" id="Name" />
-                        <input type="submit" class="btn btn-primary" value="Search" />
-                    </div>
-                </EditForm>
-            </li>
-        </ul>             
-    </div>
-    <div class="container">
-        @if (searchResponse?.Data != null)
-        {
+        <div class="container">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <strong>Search Results</strong>
+                    <strong>Index Name: </strong> @searchIndexStatistics.IndexName <br />
+                    <strong>Documents Count: </strong> @searchIndexStatistics.DocumentCount <br />
+                    <strong>Documents Size: </strong> @searchIndexStatistics.StorageSize <br />
                 </li>
-                @foreach (var result in searchResponse.Data)
-                {                    
-                    <li class="list-group-item">
-                        @result.HotelName
-                    </li>
-                }
+                <li class="list-group-item">
+                    <button type="button" class="btn btn-danger" @onclick="DeleteIndex">Delete Index</button>
+                </li>
+                <li class="list-group-item">
+                    <EditForm Model=@searchBody OnSubmit="SearchIndex">
+                        <div class="form-inline">
+                            <InputText @bind-Value=searchBody.Search class="form-control" id="Name" />
+                            <input type="submit" class="btn btn-primary" value="Search" />
+                        </div>
+                    </EditForm>
+                </li>
             </ul>
-        }
-    </div>
+        </div>
+        <div class="container">
+            @if (searchResponse?.ResultList != null)
+            {
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>@searchResponse.TotalCount Search Results:</strong>
+                    </li>
+                    @foreach (var result in searchResponse.ResultList)
+                    {
+                        <li class="list-group-item">
+                            <strong>@result.HotelName</strong>
+                            <p>
+                                @result.Description
+                            </p>
+                        </li>
+                    }
+                    <li class="list-group-item">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                @if (searchResponse.previousPage.HasValue)
+                                {
+                                    <li class="page-item"><button class="page-link" @onclick="() => PageSearchIndex(searchResponse.previousPage.Value)">Previous</button></li>
+                                }
+                                <li class="page-item"><a class="page-link"><strong>@searchResponse.currentPage</strong></a></li>
+                                @if (searchResponse.nextPage.HasValue)
+                                {
+                                    <li class="page-item"><button class="page-link" @onclick="() => PageSearchIndex(searchResponse.nextPage.Value)">Next</button></li>
+                                }
+                            </ul>
+                        </nav>
+                    </li>
+                </ul>
+            }
+        </div>
     }
     else
     {
-    <button type="button" class="btn btn-primary" @onclick="CreateIndex">Create Index</button>
+        <button type="button" class="btn btn-primary" @onclick="CreateIndex">Create Index</button>
     }
-    }
-    else
-    {
+}
+else
+{
     <p>Loading...</p>
-    }
+}
 
 @code {
     private IndexStats searchIndexStatistics;
     private bool afterFirstLoad = false;
     private SearchResponse searchResponse;
     private SearchBody searchBody = new SearchBody();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,5 +117,15 @@
         {
             searchResponse = await response.Content.ReadFromJsonAsync<SearchResponse>();
         }
+    }
+    private async Task PageSearchIndex(int page)
+    {
+        searchBody.Page = page;
+        await SearchIndex();
+    }
+    private async Task<IEnumerable<string>> AutoSuggest(string term)
+    {
+        var suggestions = await Http.GetFromJsonAsync<IEnumerable<string>>($"EnrichedSearches/AutoSuggest?term={term}");
+        return suggestions;
     }
 }
