@@ -150,7 +150,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy code to App Service: $(webAppName)'
             inputs:
-              azureSubscription: '$(demoSubscriptionId)'
+              azureSubscription: 'Logan Enterprise Subscription'
               appType: 'webAppLinux'
               appName: '$(webAppName)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Server.zip'
@@ -158,7 +158,7 @@ stages:
           - task: AzurePowerShell@5
             displayName: 'Add AppSettings to App Service'
             inputs:
-              azureSubscription: '$(demoSubscriptionId)'
+              azureSubscription: 'Logan Enterprise Subscription'
               ScriptType: 'FilePath'
               ScriptPath: '$(Pipeline.Workspace)/drop/IaC/Powershell/Add-AppSettings.ps1'
               ScriptArguments: '-ResourceGroupName $(demoResourceGroup) -WebAppName $(webAppName) -searchservicename $(searchServiceName) -storageaccountname $(storageAccountName)'
