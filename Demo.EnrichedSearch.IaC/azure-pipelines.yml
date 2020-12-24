@@ -30,6 +30,14 @@ stages:
         Contents: '*.json'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/IaC'
         CleanTargetFolder: true
+    
+    - task: CopyFiles@2
+      displayName: 'Copy IaC Powershell Files'
+      inputs:
+        SourceFolder: 'Demo.EnrichedSearch.IaC/Powershell'
+        Contents: '*.ps1'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/IaC/Powershell'
+        CleanTargetFolder: true
 
     - task: UseDotNet@2
       displayName: 'Use .NET Core SDK $(dotnetSdkVersion)'
@@ -146,3 +154,12 @@ stages:
               appType: 'webAppLinux'
               appName: '$(webAppName)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Server.zip'
+
+          - task: AzurePowerShell@5
+            displayName: 'Add AppSettings to App Service'
+            inputs:
+              azureSubscription: 'Logan Enterprise Subscription'
+              ScriptType: 'FilePath'
+              ScriptPath: '$(Pipeline.Workspace)/drop/IaC/Powershell/Add-AppSettings.ps1'
+              ScriptArguments: '-ResourceGroupName $(demoResourceGroup) -WebAppName $(webAppName) -searchservicename $(searchServiceName) -storageaccountname $(storageAccountName)'
+              azurePowerShellVersion: 'LatestVersion'
