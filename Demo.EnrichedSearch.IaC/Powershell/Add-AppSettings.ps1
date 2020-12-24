@@ -4,8 +4,8 @@
     [string]$SearchServiceName,
     [string]$StorageAccountName
 )
-Install-Module -Name Az.Search
-Install-Module -Name Az.Websites
+Install-Module -Name Az.Search -force
+Install-Module -Name Az.Websites -force
 
 $keys = Get-AzSearchAdminKeyPair -ResourceGroupName $ResourceGroupName -ServiceName $SearchServiceName
 
