@@ -10,4 +10,4 @@ Install-Module -Name Az.Websites -force
 $keys = Get-AzSearchAdminKeyPair -ResourceGroupName $ResourceGroupName -ServiceName $SearchServiceName
 
 $newAppSettings = @{"SearchService:ApiKey"=$keys.Primary;}
-Set-AzureRmWebApp -AppSettings $newAppSettings -Name $WebAppName -ResourceGroupName $ResourceGroupName
+Set-AzWebApp -AppSettings $newAppSettings -Name $WebAppName -ResourceGroupName $ResourceGroupName
