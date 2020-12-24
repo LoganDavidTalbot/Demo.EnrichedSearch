@@ -21,15 +21,67 @@
                 </li>
                 <li class="list-group-item">
                     <button type="button" class="btn btn-danger" @onclick="DeleteIndex">Delete Index</button>
+                    @*<BlazoredTypeahead SearchMethod="AutoSuggest"
+                               @bind-Value=searchBody.Search>
+                <SelectedTemplate>
+                    @context
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context
+                </ResultTemplate>
+                <NotFoundTemplate>
+                    Sorry, there weren't any search results.
+                </NotFoundTemplate>
+            </BlazoredTypeahead>*@
                 </li>
                 <li class="list-group-item">
-                    <EditForm Model=@searchBody OnSubmit="SearchIndex">
+                    <EditForm Model=@searchBody OnSubmit="SearchIndexAndClearFacets">
                         <div class="form-inline">
                             <InputText @bind-Value=searchBody.Search class="form-control" id="Name" />
                             <input type="submit" class="btn btn-primary" value="Search" />
                         </div>
                     </EditForm>
                 </li>
+                @if (searchResponse != null && searchResponse.Facets != null && searchResponse.Facets.Any())
+                {
+                    <li class="list-group-item">
+                        <h4>Facets</h4>
+                        <div class="form-group">
+                            <label class="form-check-label" for="facet-category">Category</label>
+                            <select class="form-control selectpicker" id="facet-category" @onchange=FacetCategorySelect>
+                                <option value=""> </option>
+                                @foreach (var item in searchResponse.Facets["Category"])
+                                {
+                                    if (item == searchBody.SelectedCategory)
+                                    {
+                                        <option selected value="@item">@item</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-check-label" for="facet-tags">Tags</label>
+                            <select class="form-control selectpicker" id="facet-tags" @onchange=FacetTagSelect>
+                                <option value=""> </option>
+                                @foreach (var item in searchResponse.Facets["Tags"])
+                                {
+                                    if (item == searchBody.SelectedTag)
+                                    {
+                                        <option selected value="@item">@item</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </li>
+                }
             </ul>
         </div>
         <div class="container">
@@ -82,6 +134,8 @@ else
     private bool afterFirstLoad = false;
     private SearchResponse searchResponse;
     private SearchBody searchBody = new SearchBody();
+    private string selectedCategory;
+    private string selectedTag;
 
 
     protected override async Task OnInitializedAsync()
@@ -109,6 +163,13 @@ else
         searchIndexStatistics = null;
     }
 
+    private async Task SearchIndexAndClearFacets()
+    {
+        searchBody.SelectedCategory = null;
+        searchBody.SelectedTag = null;
+        await SearchIndex();
+    }
+
     private async Task SearchIndex()
     {
         var response = await Http.PostAsJsonAsync<SearchBody>("EnrichedSearches/Search", searchBody);
@@ -127,5 +188,19 @@ else
     {
         var suggestions = await Http.GetFromJsonAsync<IEnumerable<string>>($"EnrichedSearches/AutoSuggest?term={term}");
         return suggestions;
+    }
+
+    private async Task FacetCategorySelect(ChangeEventArgs e)
+    {
+        var value = e.Value.ToString();
+        searchBody.SelectedCategory = (string.IsNullOrWhiteSpace(value)) ? null : value;
+        await SearchIndex();
+    }
+
+    private async Task FacetTagSelect(ChangeEventArgs e)
+    {
+        var value = e.Value.ToString();
+        searchBody.SelectedTag = (string.IsNullOrWhiteSpace(value)) ? null : value;
+        await SearchIndex();
     }
 }
