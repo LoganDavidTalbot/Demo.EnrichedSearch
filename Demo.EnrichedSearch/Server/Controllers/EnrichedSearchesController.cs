@@ -18,7 +18,7 @@ namespace Demo.EnrichedSearch.Server.Controllers
         {
             _searchIndexService = searchIndexService;
             _searchService = searchService;
-            _hotelIndexName = configuration.GetSection("SearchService")["HotelIndexName"];
+            _hotelIndexName = configuration["SearchService_HotelIndexName"];
         }
 
         public IConfiguration Configuration { get; }
