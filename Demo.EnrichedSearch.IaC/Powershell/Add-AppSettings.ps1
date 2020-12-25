@@ -7,7 +7,7 @@
 Install-Module -Name Az.Search -force
 Install-Module -Name Az.Websites -force
 
-$keys = Get-AzSearchAdminKeyPair -ResourceGroupName $ResourceGroupName -ServiceName $SearchServiceName
+$searchServiceKeys = Get-AzSearchAdminKeyPair -ResourceGroupName $ResourceGroupName -ServiceName $SearchServiceName
 
-$newAppSettings = @{"SearchService:ApiKey"=$keys.Primary;}
+$newAppSettings = @{"SearchService_ServiceName"=$SearchServiceName;"SearchService_ApiKey"=$searchServiceKeys.Primary;}
 Set-AzWebApp -AppSettings $newAppSettings -Name $WebAppName -ResourceGroupName $ResourceGroupName

@@ -26,9 +26,9 @@ namespace Demo.EnrichedSearch.Server
         {
             services.AddSingleton<IConfiguration>(Configuration);
 
-            string serviceName = Configuration.GetSection("SearchService")["ServiceName"];
-            string apiKey = Configuration.GetSection("SearchService")["ApiKey"];
-            string indexName = Configuration.GetSection("SearchService")["HotelIndexName"];
+            string serviceName = Configuration["SearchService_ServiceName"];
+            string apiKey = Configuration["SearchService_ApiKey"];
+            string indexName = Configuration["SearchService_HotelIndexName"];
 
             // Create a SearchIndexClient to send create/delete index commands
             Uri serviceEndpoint = new Uri($"https://{serviceName}.search.windows.net/");
