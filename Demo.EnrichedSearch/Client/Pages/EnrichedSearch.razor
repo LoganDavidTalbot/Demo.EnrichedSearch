@@ -21,26 +21,25 @@
                 </li>
                 <li class="list-group-item">
                     <button type="button" class="btn btn-danger" @onclick="DeleteIndex">Delete Index</button>
-                    @*<BlazoredTypeahead SearchMethod="AutoSuggest"
-                               @bind-Value=searchBody.Search>
-                <SelectedTemplate>
-                    @context
-                </SelectedTemplate>
-                <ResultTemplate>
-                    @context
-                </ResultTemplate>
-                <NotFoundTemplate>
-                    Sorry, there weren't any search results.
-                </NotFoundTemplate>
-            </BlazoredTypeahead>*@
+                    
                 </li>
                 <li class="list-group-item">
-                    <EditForm Model=@searchBody OnSubmit="SearchIndexAndClearFacets">
-                        <div class="form-inline">
-                            <InputText @bind-Value=searchBody.Search class="form-control" id="Name" />
-                            <input type="submit" class="btn btn-primary" value="Search" />
-                        </div>
-                    </EditForm>
+                    <div class="form-inline">                        
+                        <BlazoredTypeahead SearchMethod="AutoSuggest" @bind-Value=searchBody.Search>
+                            <SelectedTemplate>
+                                @context
+                            </SelectedTemplate>
+                            <ResultTemplate>
+                                @context
+                            </ResultTemplate>
+                            <NotFoundTemplate>
+                                Sorry, there weren't any search results.
+                            </NotFoundTemplate>
+                        </BlazoredTypeahead>
+                        <button type="submit" class="btn btn-primary" @onclick="SearchIndexAndClearFacets">
+                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Search
+                        </button>                        
+                    </div>   
                 </li>
                 @if (searchResponse != null && searchResponse.Facets != null && searchResponse.Facets.Any())
                 {
