@@ -13,7 +13,7 @@ $searchServiceKeys = Get-AzSearchAdminKeyPair -ResourceGroupName $ResourceGroupN
 
 # Get Storage Account String
 $sa = Get-AzStorageAccount -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName
-$saKey = (Get-AzStorageAccountKey -ResourceGroupName $ResourceGroupName -Name $saName)[0].Value
+$saKey = (Get-AzStorageAccountKey -ResourceGroupName $ResourceGroupName -Name $StorageAccountName)[0].Value
 $saConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $StorageAccountName + ';AccountKey=' + $saKey + ';EndpointSuffix=core.windows.net' 
 
 # Get CognitiveService Key
