@@ -9,7 +9,7 @@
       "value": "westeurope"
     },
     "sku": {
-      "value": "s1"
+      "value": "standard"
     },
     "hostingMode": {
       "value": "Default"
