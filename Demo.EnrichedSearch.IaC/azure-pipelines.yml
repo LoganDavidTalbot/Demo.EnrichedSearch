@@ -153,7 +153,7 @@ stages:
               azureSubscription: 'Logan Enterprise Subscription'
               ScriptType: 'FilePath'
               ScriptPath: '$(Pipeline.Workspace)/drop/IaC/Powershell/Add-AppSettings.ps1'
-              ScriptArguments: '-ResourceGroupName $(demoResourceGroup) -WebAppName $(webAppName) -searchservicename $(searchServiceName) -storageaccountname $(storageAccountName) -$CognitiveServiceName $(cognitiveServiceName)'
+              ScriptArguments: '-ResourceGroupName $(demoResourceGroup) -WebAppName $(webAppName) -searchservicename $(searchServiceName) -storageaccountname $(storageAccountName) -CognitiveServiceName $(cognitiveServiceName)'
               azurePowerShellVersion: 'LatestVersion'    
 
           - task: AzureWebApp@1
