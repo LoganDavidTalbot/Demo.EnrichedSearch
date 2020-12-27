@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.EnrichedSearch.Shared"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.EnrichedSearch.IaC", "Demo.EnrichedSearch.IaC\Demo.EnrichedSearch.IaC.csproj", "{B6B5F38B-866F-46F7-9B0F-AC15CBB84490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.EnrichedSearch.Service", "Demo.EnrichedSearch.Service\Demo.EnrichedSearch.Service.csproj", "{0D2AD75E-F1AB-4507-9EE4-10675A5596A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.EnrichedSearch.Service", "Demo.EnrichedSearch.Service\Demo.EnrichedSearch.Service.csproj", "{0D2AD75E-F1AB-4507-9EE4-10675A5596A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
