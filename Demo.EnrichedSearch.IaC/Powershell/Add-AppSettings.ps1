@@ -24,6 +24,6 @@ $newAppSettings = @{
     "SearchService_ServiceName"=$SearchServiceName;
     "SearchService_ApiKey"=$searchServiceKeys.Primary;
     "AzureBlobConnectionString"=$saConnectionString;
-    "CognitiveServiceKey"=$cognitiveServiceKey;
+    "CognitiveServiceKey"=$cognitiveServiceKey.Primary;
 }
 Set-AzWebApp -AppSettings $newAppSettings -Name $WebAppName -ResourceGroupName $ResourceGroupName
