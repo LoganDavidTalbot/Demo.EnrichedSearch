@@ -51,24 +51,10 @@
         "name": "[parameters('accountType')]"
       },
       "kind": "[parameters('kind')]",
-      "tags": {}
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2019-06-01",
-      "name": "[parameters('storageAccountName')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "kind": "StorageV2",
-      "properties": {
-        "accessTier": "Hot"
-      },
+      "tags": {},
       "resources": [
         {
-          "type": "blobServices/containers",
+          "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
           "apiVersion": "2019-06-01",
           "name": "[concat('default/', parameters('containerName'))]",
           "dependsOn": [
