@@ -25,6 +25,9 @@
     },
     "allowBlobPublicAccess": {
       "value": true
+    },
+    "containerName": {
+      "value": "cog-search-demo"
     }
   }
 }

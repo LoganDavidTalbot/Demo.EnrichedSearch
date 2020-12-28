@@ -25,6 +25,12 @@
     },
     "allowBlobPublicAccess": {
       "type": "bool"
+    },
+    "containerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the name of the blob container."
+      }
     }
   },
   "variables": {},
@@ -46,6 +52,30 @@
       },
       "kind": "[parameters('kind')]",
       "tags": {}
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "name": "[parameters('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "accessTier": "Hot"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+          "apiVersion": "2019-06-01",
+          "name": "[concat('default/', parameters('containerName'))]",
+          "dependsOn": [
+            "[parameters('storageAccountName')]"
+          ]
+        }
+      ]
     }
   ],
   "outputs": {}
