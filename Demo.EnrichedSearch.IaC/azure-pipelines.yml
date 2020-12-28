@@ -14,7 +14,7 @@ stages:
   - job: 'Build'
     displayName: 'Build job'
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: 'ubuntu-latest'
       demands:
       - npm
 
@@ -75,7 +75,7 @@ stages:
   jobs:
   - deployment: Deploy
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: 'ubuntu-latest'
     environment: dev
     variables:
     - group: Release
@@ -145,8 +145,8 @@ stages:
               csmFile: '$(Pipeline.Workspace)/drop/IaC/webapp.json'
               csmParametersFile: '$(Pipeline.Workspace)/drop/IaC/webapp.parameters.json'
               overrideParameters: '-name $(webAppName) -hostingPlanName $(webAppPlanName) -serverFarmResourceGroup $(demoResourceGroup) -subscriptionId $(demoSubscriptionId)'
-              deploymentMode: 'Incremental'
-           
+              deploymentMode: 'Incremental'       
+
           - task: AzurePowerShell@5
             displayName: 'Add AppSettings to App Service'
             inputs:
@@ -154,8 +154,8 @@ stages:
               ScriptType: 'FilePath'
               ScriptPath: '$(Pipeline.Workspace)/drop/IaC/Powershell/Add-AppSettings.ps1'
               ScriptArguments: '-ResourceGroupName $(demoResourceGroup) -WebAppName $(webAppName) -searchservicename $(searchServiceName) -storageaccountname $(storageAccountName) -CognitiveServiceName $(cognitiveServiceName)'
-              azurePowerShellVersion: 'LatestVersion'    
-
+              azurePowerShellVersion: 'LatestVersion'  
+              
           - task: AzureWebApp@1
             displayName: 'Deploy code to App Service: $(webAppName)'
             inputs:
@@ -163,3 +163,5 @@ stages:
               appType: 'webAppLinux'
               appName: '$(webAppName)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Server.zip'
+              
+            
