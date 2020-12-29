@@ -16,6 +16,14 @@ namespace Demo.EnrichedSearch.Shared.Models.AiSearch
         [JsonPropertyName("id")]
         public string Id { get; set; }
 
+        [SearchableField(IsSortable = true)]
+        [JsonPropertyName("fileName")]
+        public string FileName { get; set; }
+
+        [SearchableField(IsSortable = true)]
+        [JsonPropertyName("fileLocation")]
+        public string FileLocation { get; set; }
+
         [SearchableField]
         [JsonPropertyName("content")]
         public string Content { get; set; }

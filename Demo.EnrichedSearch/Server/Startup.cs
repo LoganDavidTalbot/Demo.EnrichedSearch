@@ -29,16 +29,24 @@ namespace Demo.EnrichedSearch.Server
             string serviceName = Configuration["SearchService_ServiceName"];
             string apiKey = Configuration["SearchService_ApiKey"];
             string indexName = Configuration["SearchService_HotelIndexName"];
+            string storageConnectionString = Configuration["AzureBlobConnectionString"];
+            string containerName = Configuration["AzureBlobContainerName"];
+            string indexAiName = Configuration["AiSearchIndexName"];
+            string indexerAiName = Configuration["AiSearchIndexerName"];
+            string cognitiveServiceKey = Configuration["CognitiveServiceKey"];
 
             // Create a SearchIndexClient to send create/delete index commands
             Uri serviceEndpoint = new Uri($"https://{serviceName}.search.windows.net/");
             AzureKeyCredential credential = new AzureKeyCredential(apiKey);
             SearchIndexClient adminClient = new SearchIndexClient(serviceEndpoint, credential);
+            SearchIndexerClient indexerClient = new SearchIndexerClient(serviceEndpoint, credential);
 
             // Create a SearchClient to load and query documents
             SearchClient srchclient = new SearchClient(serviceEndpoint, indexName, credential);
             services.AddTransient<ISearchIndexService, SearchIndexService>(s => new SearchIndexService(srchclient, adminClient));
             services.AddTransient<ISearchService, SearchService>(s => new SearchService(srchclient));
+            services.AddTransient<IAiSearchIndexService, AiSearchIndexService>(s => new AiSearchIndexService(adminClient, indexerClient,
+                storageConnectionString, containerName, indexAiName, indexerAiName, cognitiveServiceKey));
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
