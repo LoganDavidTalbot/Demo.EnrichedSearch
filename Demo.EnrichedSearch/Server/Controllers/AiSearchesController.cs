@@ -11,11 +11,13 @@ namespace Demo.EnrichedSearch.Server.Controllers
     public class AiSearchesController : ControllerBase
     {
         private readonly IAiSearchIndexService _aiSearchIndexService;
+        private readonly IAiSearchService _aiSearchService;
         private readonly string _aiIndexName;
 
-        public AiSearchesController(IAiSearchIndexService aiSearchIndexService, IConfiguration configuration)
+        public AiSearchesController(IAiSearchIndexService aiSearchIndexService, IAiSearchService aiSearchService, IConfiguration configuration)
         {
             _aiSearchIndexService = aiSearchIndexService;
+            _aiSearchService = aiSearchService;
             _aiIndexName = configuration["AiSearchIndexName"];
         }
 
@@ -43,6 +45,19 @@ namespace Demo.EnrichedSearch.Server.Controllers
                 DocumentCount = index.DocumentCount,
                 StorageSize = index.StorageSize
             });
+        }
+
+        [HttpPost("Search")]
+        public async Task<ActionResult> Search([FromBody] SearchBody body)
+        {
+            var response = await _aiSearchService.RunQueriesAsync(body.Search, body.Page);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
         }
     }
 }

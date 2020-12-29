@@ -43,10 +43,13 @@ namespace Demo.EnrichedSearch.Server
 
             // Create a SearchClient to load and query documents
             SearchClient srchclient = new SearchClient(serviceEndpoint, indexName, credential);
+            SearchClient aiSrchclient = new SearchClient(serviceEndpoint, indexAiName, credential);
+
             services.AddTransient<ISearchIndexService, SearchIndexService>(s => new SearchIndexService(srchclient, adminClient));
             services.AddTransient<ISearchService, SearchService>(s => new SearchService(srchclient));
             services.AddTransient<IAiSearchIndexService, AiSearchIndexService>(s => new AiSearchIndexService(adminClient, indexerClient,
                 storageConnectionString, containerName, indexAiName, indexerAiName, cognitiveServiceKey));
+            services.AddTransient<IAiSearchService, AiSearchService>(s => new AiSearchService(aiSrchclient));
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
