@@ -8,5 +8,6 @@ namespace Demo.EnrichedSearch.Service
         Task<string> CreateIndexAndIndexerAsync();
         Task<bool> DeleteIndexAsync();
         Task<SearchIndexStatistics> GetIndexStatisticsAsync();
+        Task<string> GetIndexerOverallStatusAsync();
     }
 }

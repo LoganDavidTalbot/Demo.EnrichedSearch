@@ -1,4 +1,5 @@
-﻿using Demo.EnrichedSearch.Service;
+﻿using Azure.Search.Documents.Indexes.Models;
+using Demo.EnrichedSearch.Service;
 using Demo.EnrichedSearch.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,12 +14,14 @@ namespace Demo.EnrichedSearch.Server.Controllers
         private readonly IAiSearchIndexService _aiSearchIndexService;
         private readonly IAiSearchService _aiSearchService;
         private readonly string _aiIndexName;
+        private readonly string _aiIndexerName;
 
         public AiSearchesController(IAiSearchIndexService aiSearchIndexService, IAiSearchService aiSearchService, IConfiguration configuration)
         {
             _aiSearchIndexService = aiSearchIndexService;
             _aiSearchService = aiSearchService;
             _aiIndexName = configuration["AiSearchIndexName"];
+            _aiIndexerName = configuration["AiSearchIndexerName"];
         }
 
         [HttpPost("Create")]
@@ -32,7 +35,17 @@ namespace Demo.EnrichedSearch.Server.Controllers
         [HttpGet()]
         public async Task<ActionResult> GetIndex()
         {
-            var index = await _aiSearchIndexService.GetIndexStatisticsAsync();
+            SearchIndexStatistics index = null;
+            string indexerStatus = null;
+            try
+            {
+                index = await _aiSearchIndexService.GetIndexStatisticsAsync();
+                indexerStatus = await _aiSearchIndexService.GetIndexerOverallStatusAsync();
+            }
+            catch (System.Exception e)
+            {
+                return BadRequest(new { errorMessage = e.Message });
+            }            
 
             if (index == null)
             {
@@ -43,7 +56,9 @@ namespace Demo.EnrichedSearch.Server.Controllers
             {
                 IndexName = _aiIndexName,
                 DocumentCount = index.DocumentCount,
-                StorageSize = index.StorageSize
+                StorageSize = index.StorageSize,
+                IndexerName = _aiIndexerName,
+                IndexerStatus = indexerStatus
             });
         }
 

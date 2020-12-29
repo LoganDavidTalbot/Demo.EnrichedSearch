@@ -69,7 +69,7 @@ namespace Demo.EnrichedSearch.Service
             SearchIndexer demoIndexer = await CreateDemoIndexerAsync(_indexerClient, dataSource, skillset, demoIndex);
 
             // Check indexer overall status
-            return CheckIndexerOverallStatus(_indexerClient, demoIndexer);
+            return await CheckIndexerOverallStatusAsync(_indexerClient, demoIndexer.Name);
         }
 
         public async Task<bool> DeleteIndexAsync()
@@ -89,6 +89,11 @@ namespace Demo.EnrichedSearch.Service
             {
                 return null;
             }
+        }
+
+        public async Task<string> GetIndexerOverallStatusAsync()
+        {
+            return await CheckIndexerOverallStatusAsync(_indexerClient, _indexerName);
         }
 
         #region Private Methods
@@ -411,11 +416,11 @@ namespace Demo.EnrichedSearch.Service
             return indexer;
         }
 
-        private static string CheckIndexerOverallStatus(SearchIndexerClient indexerClient, SearchIndexer indexer)
+        private static async Task<string> CheckIndexerOverallStatusAsync(SearchIndexerClient indexerClient, string indexerName)
         {
             try
             {
-                var demoIndexerExecutionInfo = indexerClient.GetIndexerStatus(indexer.Name);
+                var demoIndexerExecutionInfo = await indexerClient.GetIndexerStatusAsync(indexerName);
 
                 if(demoIndexerExecutionInfo.Value?.Status != null)
                 {
