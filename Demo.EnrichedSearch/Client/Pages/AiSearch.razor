@@ -16,12 +16,12 @@
         <div class="container">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <h5>Index</h5>
+                    <h4>Index</h4>
                     <strong>Index Name: </strong> @searchIndexStatistics.IndexName <br />
                     <strong>Documents Count: </strong> @searchIndexStatistics.DocumentCount <br />
                     <strong>Documents Size: </strong> @searchIndexStatistics.StorageSize <br />
                     <hr />
-                    <h5>Indexer</h5>
+                    <h4>Indexer</h4>
                     <strong>Indexer Name: </strong> @searchIndexStatistics.IndexName <br />
                     <strong>Index Status: </strong> @searchIndexStatistics.IndexerStatus <br />
                     <hr />
@@ -37,35 +37,32 @@
         <div class="container">
             @if (searchResponse?.ResultList != null)
             {
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <strong>@searchResponse.TotalCount Search Results:</strong>
-                    </li>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>@searchResponse.TotalCount Search Results:</strong>
                     @foreach (var result in searchResponse.ResultList)
                     {
-                        <li class="list-group-item">
-                            <strong>@result.FileName</strong>
-                            <p>
-                                @result.FileLocation
-                            </p>
-                        </li>
+                        <hr />
+                        <strong>@result.FileName</strong> 
+                        <p>
+                            <a href="@result.FileLocation" target="_blank" class="btn btn-link">Download</a>
+                        </p>
                     }
-                    <li class="list-group-item">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                @if (searchResponse.previousPage.HasValue)
-                                {
-                                    <li class="page-item"><button class="page-link" @onclick="() => PageSearchIndex(searchResponse.previousPage.Value)">Previous</button></li>
-                                }
-                                <li class="page-item"><a class="page-link"><strong>@searchResponse.currentPage</strong></a></li>
-                                @if (searchResponse.nextPage.HasValue)
-                                {
-                                    <li class="page-item"><button class="page-link" @onclick="() => PageSearchIndex(searchResponse.nextPage.Value)">Next</button></li>
-                                }
-                            </ul>
-                        </nav>
-                    </li>
-                </ul>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            @if (searchResponse.previousPage.HasValue)
+                            {
+                                <li class="page-item"><button class="page-link" @onclick="() => PageSearchIndex(searchResponse.previousPage.Value)">Previous</button></li>
+                            }
+                            <li class="page-item"><a class="page-link"><strong>@searchResponse.currentPage</strong></a></li>
+                            @if (searchResponse.nextPage.HasValue)
+                            {
+                                <li class="page-item"><button class="page-link" @onclick="() => PageSearchIndex(searchResponse.nextPage.Value)">Next</button></li>
+                            }
+                        </ul>
+                    </nav>
+                </li>
+            </ul>
             }
         </div>
     }

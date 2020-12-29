@@ -20,5 +20,12 @@ $saConnectionString = 'DefaultEndpointsProtocol=https;AccountName=' + $StorageAc
 $cognitiveServiceKey = Get-AzCognitiveServicesAccountKey -ResourceGroupName $ResourceGroupName -name $CognitiveServiceName
 
 # Add App Settings to Web App
-$newAppSettings = @{"SearchService_ServiceName"=$SearchServiceName;"SearchService_ApiKey"=$searchServiceKeys.Primary;"AzureBlobConnectionString"=$saConnectionString;"CognitiveServiceKey"=$cognitiveServiceKey.Key1;}
+$newAppSettings = @{
+    "SearchService_ServiceName"=$SearchServiceName;
+    "SearchService_ApiKey"=$searchServiceKeys.Primary;
+    "AzureBlobConnectionString"=$saConnectionString;
+    "CognitiveServiceKey"=$cognitiveServiceKey.Key1;
+    "AzureBlobAccountKey"=$saKey;
+    "AzureBlobAccountName"=$StorageAccountName;
+}
 Set-AzWebApp -AppSettings $newAppSettings -Name $WebAppName -ResourceGroupName $ResourceGroupName
