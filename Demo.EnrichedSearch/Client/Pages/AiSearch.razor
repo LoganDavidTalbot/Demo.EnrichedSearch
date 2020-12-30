@@ -25,7 +25,7 @@
                     <strong>Indexer Name: </strong> @searchIndexStatistics.IndexName <br />
                     <strong>Index Status: </strong> @searchIndexStatistics.IndexerStatus <br />
                     <hr />
-                    <EditForm Model=@searchBody OnSubmit="SearchIndex">
+                    <EditForm Model=@searchBody OnSubmit="() => PageSearchIndex(1)">
                         <div class="form-inline">
                             <InputText @bind-Value=searchBody.Search class="form-control" id="Name" />
                             <input type="submit" class="btn btn-primary" value="Search" />
