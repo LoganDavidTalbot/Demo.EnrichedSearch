@@ -91,7 +91,7 @@ stages:
             displayName: 'Deploy ARM Template for Storage Account'
             inputs:
               deploymentScope: 'Resource Group'
-              azureResourceManagerConnection: '$(azureServiceConnectionName)'
+              azureResourceManagerConnection: 'Enriched Search Service Connection'
               subscriptionId: '$(demoSubscriptionId)'
               action: 'Create Or Update Resource Group'
               resourceGroupName: '$(demoResourceGroup)'
@@ -106,7 +106,7 @@ stages:
             displayName: 'Deploy ARM Template for Cognitive Service'
             inputs:
               deploymentScope: 'Resource Group'
-              azureResourceManagerConnection: '$(azureServiceConnectionName)'
+              azureResourceManagerConnection: 'Enriched Search Service Connection'
               subscriptionId: '$(demoSubscriptionId)'
               action: 'Create Or Update Resource Group'
               resourceGroupName: '$(demoResourceGroup)'
@@ -121,7 +121,7 @@ stages:
             displayName: 'Deploy ARM Template for Search Service'
             inputs:
               deploymentScope: 'Resource Group'
-              azureResourceManagerConnection: '$(azureServiceConnectionName)'
+              azureResourceManagerConnection: 'Enriched Search Service Connection'
               subscriptionId: '$(demoSubscriptionId)'
               action: 'Create Or Update Resource Group'
               resourceGroupName: '$(demoResourceGroup)'
@@ -136,7 +136,7 @@ stages:
             displayName: 'Deploy ARM Template for Web Application'
             inputs:
               deploymentScope: 'Resource Group'
-              azureResourceManagerConnection: '$(azureServiceConnectionName)'
+              azureResourceManagerConnection: 'Enriched Search Service Connection'
               subscriptionId: '$(demoSubscriptionId)'
               action: 'Create Or Update Resource Group'
               resourceGroupName: '$(demoResourceGroup)'
@@ -150,7 +150,7 @@ stages:
           - task: AzurePowerShell@5
             displayName: 'Add AppSettings to App Service'
             inputs:
-              azureSubscription: '$(azureServiceConnectionName)'
+              azureSubscription: 'Enriched Search Service Connection'
               ScriptType: 'FilePath'
               ScriptPath: '$(Pipeline.Workspace)/drop/IaC/Powershell/Add-AppSettings.ps1'
               ScriptArguments: '-ResourceGroupName $(demoResourceGroup) -WebAppName $(webAppName) -searchservicename $(searchServiceName) -storageaccountname $(storageAccountName) -CognitiveServiceName $(cognitiveServiceName)'
@@ -159,7 +159,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy code to App Service: $(webAppName)'
             inputs:
-              azureSubscription: '$(azureServiceConnectionName)'
+              azureSubscription: 'Enriched Search Service Connection'
               appType: 'webAppLinux'
               appName: '$(webAppName)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Server.zip'
