@@ -1,7 +1,7 @@
 # Azure Cognitive Search Demo
 
 ## Introduction
-This repository is used to demo and investigate the capabilities of the Azure Cognitive Search Service. The repository is split into two parts. One part which demos the a enriched search experience and the second part that demos searching files using Azure Cogintive Services to index (collect) the data.
+This repository is used to demo and investigate the capabilities of the Azure Cognitive Search Service. The repository is split into two parts. One part which demos the a enriched search experience and the second part that demos searching files using Azure Cognitive Services to index (collect) the data. With this repository you can easily build and deploy a working solution of Azure Cognitive Search using Azure DevOps (see Setup).
 
 ### Useful Links
 - [What is Azure Cognitive Search](https://docs.microsoft.com/en-gb/azure/search/search-what-is-azure-search)
@@ -11,7 +11,7 @@ This repository is used to demo and investigate the capabilities of the Azure Co
 ## Demo Desciprition
 
 ### Part 1: Enriched Search
-The enriched search part of the demo, demonstrates Azure Cognitive Searches capbilities as a search engine. The features it includes are:
+The enriched search part of the demo, demonstrates Azure Cognitive Searches capabilities as a search engine. The features it includes are:
 - Creating an index.
 - Populating the indexer with static dummy data.
 - Deleting the index.
