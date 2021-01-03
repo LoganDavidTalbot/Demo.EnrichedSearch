@@ -55,13 +55,13 @@ ARM Templates:
 Powershell files:
 - Add-AppSettings.ps1 - get key and connectionstrings from Azure services and add them to the App Settings in the Azure App Service.
 
-## Demo.EnrichedSearch.Client
+### Demo.EnrichedSearch.Client
 This project is a Blazor client webassembly application with 3 pages:
 - Home page - Application root handing page.
 - Enriched Search page - Allow users to create, delete and search an Azure Cognitive Search Index.
 - Enriched Search with AI page - Allows user to create an index, indexer, and skillsets. It also allows you to search the created index.
 
-## Demo.EnrichedSearch.Server
+### Demo.EnrichedSearch.Server
 This project is a .NET 5.0 ASP.net Web API project which services the client application.
 
 Endpoints:
@@ -75,10 +75,10 @@ Endpoints:
   - POST /AiSearches/Search
   - GET /AiSearches
 
-## Demo.EnrichedSearch.Service
+### Demo.EnrichedSearch.Service
 This project intereacts with the Azure Cognitive service API.
 
-## Demo.EnrichedSearch.Shared
+### Demo.EnrichedSearch.Shared
 Common models which are used across the client, server and service layers.
 
 ## Setup
@@ -138,3 +138,6 @@ Steps to import a YAML Pipelines file:
 
 ### Adding files to the Azure Blob container
 The final step is to add files to the Azure blob container after the build and deploy pipeline has released. These files can be any type of file e.g. pdf, png, ppt, word, etc.
+
+# Using the application
+After doing the setup process should now have an application which is hosted on your App Service. Go the App Services URL and an Blazor .NET application should upload.
